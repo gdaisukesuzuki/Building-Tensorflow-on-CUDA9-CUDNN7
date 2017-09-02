@@ -48,14 +48,10 @@ __CUDACC_VER__
 に関する記述を変更した
 
 
-/*
-#define __CUDACC_VER__ "__CUDACC_VER__ is no longer supported.  Use __CUDACC_VER_MAJOR__, __CUDACC_VER_MINOR__, and __CUDACC_VER_BUILD__ instead."
-*/
 #define __CUDACC_VER__  ((__CUDACC_VER_MAIN__)*10000+(__CUDACC_VER_MINOR__)*100+(__CUDACC_VER_BUILD__))
 
 4．あとはbazel を実行すれば構築できるが、CPU の SSE やらAVXは使えるに越したことはないと思うので、
 お忘れ無く。
 
-bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both ¥
-   --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
+bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both  --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
 
