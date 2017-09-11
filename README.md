@@ -5,7 +5,16 @@ CUDA9.0RC+CUDNN7.0 でtensorflow が構築できたよ。
 
 環境
 GPU: GTX 10XX
-OS:  UBUNTU 16.04 , 17.04 , and 17.10 beta 
+OS:  UBUNTU 16.04 , 17.04 　（17.10 は2017.9.10 現在ダメ）
+
+　17.10beta は行けるかと思いましたが、パッケージ更新でビルド不可に。
+ 
+ 具体的には、GNU LIBC 2.26 以上でコンパイル不可（typedef のパースがおかしい？）なのが原因。
+ 
+ 以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
+ 
+ https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
+ 
 
 
 必要なものドライバ等
@@ -19,7 +28,7 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 
 https://developer.nvidia.com/cuda-release-candidate-download
 
-3. CUDNN7.0.1 
+3. CUDNN7.0.1 ⇒ CUDNN7.0.2
 
 https://developer.nvidia.com/cudnn
 
@@ -48,7 +57,7 @@ https://github.com/tensorflow/tensorflow/pull/12502
 3． ./configure をかける
 
 ・　 GCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
-・ 　CUDNN のバージョンは 7.0.1 とBuildNo まで入れること
+・ 　CUDNN のバージョンは 7.0.2 とBuildNo まで入れること
 
 ここから bazel でビルドすればよいだけだが、 CUDA のヘッダファイルが悪さをしてるので、応急処置で
 
@@ -67,4 +76,9 @@ __CUDACC_VER__
 とりあえず、自分のビルドコマンド例
 
 bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both  --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
+
+bazel の使った一連のビルド操作は、この記事が参考になるかと。
+
+https://hinaser.github.io/Machine-Learning/deeplearning-by-tensorflow-with-gpu.html
+
 
