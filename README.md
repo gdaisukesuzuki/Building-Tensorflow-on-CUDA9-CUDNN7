@@ -48,7 +48,12 @@ https://github.com/tensorflow/tensorflow/releases/tag/v1.3.0
 2. CUDA9.0 用パッチ
 
 https://github.com/tensorflow/tensorflow/issues/12474
-※　パッチは2つリンクがあるけど、下の方。
+※　パッチは2つリンクがあるけど、下の方。具体的には
+
+wget https://github.com/tensorflow/tensorflow/files/1253794/0002-TF-1.3-CUDA-9.0-and-cuDNN-7.0-support.patch.txt
+
+patch -p1 < ~/Downloads/0002-TF-1.3-CUDA-9.0-and-cuDNN-7.0-support.patch.txt
+ 
 
 ここらへんの修正も必要なもかもしれないが未確認
 https://github.com/tensorflow/tensorflow/pull/12502
@@ -59,17 +64,8 @@ https://github.com/tensorflow/tensorflow/pull/12502
 ・　 GCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
 ・ 　CUDNN のバージョンは 7.0.2 とBuildNo まで入れること
 
-ここから bazel でビルドすればよいだけだが、 CUDA のヘッダファイルが悪さをしてるので、応急処置で
-
-＄CUDA_HOME/include/crt/common_functions.h
-の
-
-__CUDACC_VER__
-
-に関する記述を変更した
 
 
-#define __CUDACC_VER__  ((__CUDACC_VER_MAIN__)*10000+(__CUDACC_VER_MINOR__)*100+(__CUDACC_VER_BUILD__))
 
 4．あとはbazel を実行すれば構築できるが、CPU の SSE やらAVXは使えるに越したことはないと思うので、お忘れ無く。（mavx512 がビルドできない、という書き込みを見たけど、XEONも core-X にもアクセスできないので真偽は不明）
 
@@ -77,8 +73,17 @@ __CUDACC_VER__
 
 bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both  --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
 
+5．ただしこの時点ではエラーが出るので、別のパッチ（上記ISSUEにも記載あり）をダウンロード＆パッチ宛てして再度実行らしい。
+
+wget https://storage.googleapis.com/tf-performance/public/cuda9rc_patch/eigen.f3a22f35b044.cuda9.diff
+
+cd -P bazel-out/../../../external/eigen_archive
+ 
+patch -p1 < ~/Downloads/eigen.f3a22f35b044.cuda9.diff
+    
+元のフォルダに戻って、bazel を再開⇒今度はうまくいくはず。
+
 bazel の使った一連のビルド操作は、この記事が参考になるかと。
 
 https://hinaser.github.io/Machine-Learning/deeplearning-by-tensorflow-with-gpu.html
-
 
