@@ -5,17 +5,30 @@ CUDA9.0RC+CUDNN7.0 でtensorflow が構築できたよ。
 
 環境
 GPU: GTX 10XX
-OS:  UBUNTU 16.04 , 17.04 　（17.10 は2017.9.10 現在ダメ）
+OS:  UBUNTU 16.04 , 17.04 　（17.10 は2017.9.14はできるけど注意が必要）
 
 　17.10beta は行けるかと思いましたが、パッケージ更新でビルド不可に。
  
- 具体的には、GNU LIBC 2.26 以上でコンパイル不可（typedef のパースがおかしい？）なのが原因。
- 
+ 具体的には、GNU LIBC 2.26 以上でコンパイル不可（typedef のパースがおかしい？）なのが原因。（現時点ではproposedパッケージだが本番にはすぐ反映されるかと）
+
  以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
  
  https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
  
 
+ なので、ちょー邪道な方法だが、glibc2.26 で、__float128 を宣言を無効にするしかない。
+ 具体的には
+ 
+ /usr/include/x86_64-linux-gnu/bits/floatn.h
+ 
+ を、やっつけだが。
+ 
+ https://github.com/gdaisukesuzuki/Building-Tensorflow-on-CUDA9RC-CUDNN7/blob/master/floatn.h
+ 
+ に入れ替えてごまかし回避はできた。(最新のGCC7では __float128 は有効だが、 GCC6　およびそれより下では、 __float128 を無効にしてる）
+ 
+ 以下は構築の手順
+ 
 
 必要なものドライバ等
 
