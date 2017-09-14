@@ -18,17 +18,23 @@ OS:  UBUNTU 16.04 , 17.04 　（17.10 はできるけど注意が必要 at 2017.
  https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
  
 
+*回避策
+
  なので、ちょー邪道な方法だが、glibc2.26 で、__float128 を宣言を無効にするしかない。
  具体的には
  
  /usr/include/x86_64-linux-gnu/bits/floatn.h
  
- を、やっつけだが。
+ を、やっつけだが、以下パッチ適用して、。
  
- https://github.com/gdaisukesuzuki/Building-Tensorflow-on-CUDA9RC-CUDNN7/blob/master/floatn.h
+ https://raw.githubusercontent.com/gdaisukesuzuki/Building-Tensorflow-on-CUDA9RC-CUDNN7/master/floatn.h-patch
  
- に入れ替えてごまかし回避はできた。(NVCCを通した場合は、 __float128 を無効に設定する）。ubuntu とかにマージリクエストを出そうかと思うけど、通るかは自信がない。CUDA のことだしね。
- 
+ ごまかし回避はできた。(NVCCを通した場合は、 __float128 を無効に設定する）。ubuntu とかにマージリクエストを出そうかと思うけど、通るかは自信がない。CUDA のことだしね。
+ ちなみに、archlinux ではすでに議論にはあがっていた。
+
+https://www.reddit.com/r/archlinux/comments/6zrmn1/torch_on_arch/
+
+
  以下は構築の手順
  
 
