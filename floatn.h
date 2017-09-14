@@ -26,12 +26,9 @@
    glibc includes corresponding *f128 interfaces for it.  The required
    libgcc support was added some time after the basic compiler
    support, for x86_64 and x86.  */
-/*
-#if (defined __x86_64__							\
-     ? __GNUC_PREREQ (4, 3)						\
+#if ((defined __x86_64__ &&  (!defined __NVCC__))							   \
+     ? __GNUC_PREREQ (4, 3)						                           \
      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4)))
-     */
-#if __GNUC_PREREQ(7,0)
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0
@@ -63,9 +60,6 @@
    _Complex _Float128.  */
 typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
 #  define __CFLOAT128 __cfloat128
-/*
-#  define __CFLOAT128 _Complex float __attribute__ ((__mode__ (__TC__)))
-*/
 # else
 #  define __CFLOAT128 _Complex _Float128
 # endif
@@ -77,9 +71,6 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
 /* The type _Float128 exists only since GCC 7.0.  */
 # if !__GNUC_PREREQ (7, 0) || defined __cplusplus
 typedef __float128 _Float128;
-/*
-#  define _Float128 __float128
-*/
 # endif
 
 /* __builtin_huge_valf128 doesn't exist before GCC 7.0.  */
