@@ -1,0 +1,20 @@
+*** floatn.h-dist	2017-09-04 16:34:21.000000000 +0900
+--- floatn.h	2017-09-14 21:46:15.334033614 +0900
+***************
+*** 28,34 ****
+     support, for x86_64 and x86.  */
+  #if (defined __x86_64__							\
+       ? __GNUC_PREREQ (4, 3)						\
+!      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4)))
+  # define __HAVE_FLOAT128 1
+  #else
+  # define __HAVE_FLOAT128 0
+--- 28,35 ----
+     support, for x86_64 and x86.  */
+  #if (defined __x86_64__							\
+       ? __GNUC_PREREQ (4, 3)						\
+!      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4))) \
+!   &&  !defined(__CUDACC__)
+  # define __HAVE_FLOAT128 1
+  #else
+  # define __HAVE_FLOAT128 0
