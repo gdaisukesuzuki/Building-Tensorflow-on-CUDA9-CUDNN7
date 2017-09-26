@@ -18,7 +18,7 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
  
  "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので、多分来年のCUDA10.0 まではこの状態（F.3.1 Host Restrictions）。
  
- http://docs.nvidia.com/cuda-rc/cuda-c-programming-guide/index.html
+ http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
 
  以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、
  
