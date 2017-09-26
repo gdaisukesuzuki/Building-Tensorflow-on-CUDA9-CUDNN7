@@ -7,6 +7,7 @@ UBUNTU Linux 上でだけど、CUDA9.0+CUDNN7.0 でtensorflow が構築できた
 
 
 環境
+
 GPU: NVidia Geforce GTX1050/1050Ti/1060/1070/1080/1080Ti
 
 OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が必要 at 2017.9.14 時点）
@@ -14,15 +15,13 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
 　ubuntu 17.10beta ではそのままでは　ビルド不可（CUDA8.0もビルドNG）。
  
  
- 具体的には、GNU LIBC 2.26 以上でコンパイル不可。具体的には、NVCC　が　”__float128” をサポートしてないのが原因。
+ 具体的には、GNU LIBC 2.26 以上でコンパイル不可。NVCC　が　”__float128” をサポートしてないのが原因。
  
- "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので、多分来年のCUDA10.0 まではこの状態（F.3.1 Host Restrictions）。
+ "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので（F.3.1 Host Restrictions）、多分来年のCUDA10.0 まではこの状態。
  
  http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
 
- 以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、
- 
- そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
+ 以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
  
  
  https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
@@ -135,9 +134,7 @@ github.com
 sourforge.net
 
 
-がホストになっている奴を削除する必要がある
-
-つうかurlsには複数のurlが記述されてるので、
+がホストになっている奴を削除する必要がある。つうかurlsには複数のurlが記述されてるので、
 
 http://mirror.bazel.build
 
@@ -150,17 +147,13 @@ https://hinaser.github.io/Machine-Learning/deeplearning-by-tensorflow-with-gpu.h
 
 6．実際にビルドに入る。
 
-GPUによる処理メインでも、CPU の SSE やらAVXは使えるに越したことはないと思うので、そのためのお忘れなく。
-
-（mavx512 がビルドできない、という書き込みを見たけど、XEON　も　core-X にもアクセスできないので真偽は不明）
+GPUによる処理メインでも、CPU の SSE やらAVXは使えるに越したことはないと思うので、そのためのお忘れなく（mavx512 がビルドできない、という書き込みを見たけど、XEON　も　core-X にもアクセスできないので真偽は不明）。
 
 とりあえず、自分のビルドコマンド例
 
 bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both  --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
 
-7．ただしこの時点では(CUDA9.0では）エラーが出るので、別のパッチ（上記ISSUEにも記載あり）をダウンロード＆パッチ当てして再度実行。
-
-(Eigenまわりのパッチらしい)
+7．ただしこの時点では(CUDA9.0では）エラーが出るので、別のパッチ（上記ISSUEにも記載あり。Eigenまわりのパッチらしい）をダウンロード＆パッチ当てしてビルド再実行。
 
 wget https://storage.googleapis.com/tf-performance/public/cuda9rc_patch/eigen.f3a22f35b044.cuda9.diff
 
