@@ -45,7 +45,7 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
 
 https://www.reddit.com/r/archlinux/comments/6zrmn1/torch_on_arch/
 
-　※　余談だが、このパッチは、　CUPY 2.0 を UBUNTU17.10 でビルドする場合にも必要（　nvcc.profile でコンパイラを GCC6に変更するだけではダメ）。
+　※　余談だが、このパッチは、　CUPY 2.0 を UBUNTU17.10 でビルドする場合にも必要（　nvcc.profile でバックエンドに使うコンパイラを GCC6（あるいはそれより前）に変更するだけではダメ）。
 
 
  以下は構築の手順
