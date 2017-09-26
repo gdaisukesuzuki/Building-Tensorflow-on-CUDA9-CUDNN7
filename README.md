@@ -14,9 +14,9 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
 　ubuntu 17.10beta ではそのままでは　ビルド不可（CUDA8.0もビルドNG）。
  
  
- 具体的には、GNU LIBC 2.26 以上でコンパイル不可。端的には、　　NVCC　が　__float128 をサポートしてないのが原因。
+ 具体的には、GNU LIBC 2.26 以上でコンパイル不可。具体的には、NVCC　が　”　__float128” をサポートしてないのが原因。
  
- "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるのでしょうがない（F.3.1 Host Restrictions）。
+ "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので、多分来年のCUDA10.0 まではこの状態（F.3.1 Host Restrictions）。
  
  http://docs.nvidia.com/cuda-rc/cuda-c-programming-guide/index.html
 
