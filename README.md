@@ -157,7 +157,7 @@ bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=
 
 wget https://storage.googleapis.com/tf-performance/public/cuda9rc_patch/eigen.f3a22f35b044.cuda9.diff
 
-pushd bazel-out/../../../external/eigen_archive
+cd -P bazel-out/../../../external/eigen_archive
  
 patch -p1 < ~/Downloads/eigen.f3a22f35b044.cuda9.diff
     
