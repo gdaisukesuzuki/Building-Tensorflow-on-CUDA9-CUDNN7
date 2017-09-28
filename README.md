@@ -1,8 +1,17 @@
-# Building-Tensorflow-on-CUDA9-CUDNN7
+# Building-Tensorflow1.3.1-with-CUDA9-CUDNN7-on-UBUNTU-LINUX
 
-CUDA9.0GA がリリースされたので。
+(17.9.28更新)
+CUDA9.0GA がリリース＋Tensorflow1.3.1 が公開されたので。
 
-UBUNTU Linux 上でだけど、CUDA9.0+CUDNN7.0 でtensorflow が構築できたよ。
+UBUNTU Linux 上で、CUDA　9.0　+　CUDNN　7.0 でtensorflow　1.3.1 が構築できたよ。
+
+Tensorflow 1.3.0 --> Tensorflow 1.3.1 ではロジックに手は加わってない。そのかわり
+
+・　Python3.6 にも正式対応
+
+・　ライブラリダウンロードが失敗するようになってた不具合を修正
+
+・CUDA 8.0, cudnn 6.0 でないと対応しない (CUDA 7.5, cudnn 5.X はダメらしい試してないけど)
 
 
 
@@ -62,7 +71,7 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 
 https://developer.nvidia.com/cuda-downloads
 
-3. CUDNN7.0.2
+3. CUDNN 7.0.2
 
 https://developer.nvidia.com/cudnn
 
@@ -76,9 +85,9 @@ http://qiita.com/conta_/items/d639ef0068c9b7a0cd12
 TENSORFLOW
 
 
-1．. Tensorflow1.3.0
+1．. Tensorflow 1.3.1
 
-https://github.com/tensorflow/tensorflow/releases/tag/v1.3.0
+https://github.com/tensorflow/tensorflow/releases/tag/v1.3.1
 
 2. CUDA9.0 用パッチ
 
@@ -108,25 +117,7 @@ https://bazel.build/
 ・ 　CUDNN のバージョンは 7.0.2 とBuildNo まで入れること
 
 
-5. あとはbazel を実行すればビルド開始だが、ここでしょーもない難関が。
-
-具体的には、 TensorFlow ビルドする最初に、他に必要なパッケージ(six等）をダウンロード＆ビルドするのだが、
-
-SHA2署名がしょっちゅう変わる。
-とか
-ダウンロードが遅いor途中でセッション切断
-
-で途中で止まってしまう。（これはCPUオンリーでのビルドでも同様）
-
-これを回避するためには、エラー停止のつど、設定ファイル
-
-tensorflow-1.3.0/tensorflow/workspace.bzl 
-
-のディレクティブ
-
-urls
-
-に記載されているアドレスから、エラーを起こしているurl を目検でコメントアウトするしかないように思われる。
+5. （冒頭のとおり、ライブラリが正常にダウンロードできるようになったのでこの箇所は削除）
 
 参考：（ちと古いが）
 
@@ -135,12 +126,18 @@ https://hinaser.github.io/Machine-Learning/deeplearning-by-tensorflow-with-gpu.h
 
 6．実際にビルドに入る。
 
-GPUによる処理メインでも、CPU の SSE やらAVXは使えるに越したことはないと思うので、そのためのお忘れなく（mavx512 がビルドできない、という書き込みを見たけど、XEON　も　core-X にもアクセスできないので真偽は不明）。
+GPUによる処理メインでも、CPU の SSE やらAVXは使えるに越したことはないと思うので、そのためのお忘れなく。
+
+とはいえ、例えば、SkyLake (6X00/7X00)なら　-maarch=skylake にすればよい。（mavx512 がビルドできない、という書き込みを見たけど、XEON　も　core-X にもアクセスできないので真偽は不明）。
+
+詳細は、gcc ドキュメントを参照
+
+https://gcc.gnu.org/onlinedocs/gcc-6.1.0/gcc/x86-Options.html#x86-Options
 
 とりあえず、自分のビルドコマンド例
 
-bazel build -c opt --config=cuda --copt=-mavx --copt=-mavx2 --copt=-mmmx --copt=-mfma --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfpmath=both  --copt=-ffast-math   //tensorflow/tools/pip_package:build_pip_package 
-
+bazel build -c opt   --config=cuda --copt=-march=skylake --copt=-mfpmath=both --copt=-ffast-math --copt=-O3 //tensorflow/tools/pip_package:build_pip_package
+ 
 7．ただしこの時点では(CUDA9.0では）エラーが出るので、別のパッチ（上記ISSUEにも記載あり。Eigenまわりのパッチらしい）をダウンロード＆パッチ当てしてビルド再実行。
 
 wget https://storage.googleapis.com/tf-performance/public/cuda9rc_patch/eigen.f3a22f35b044.cuda9.diff
