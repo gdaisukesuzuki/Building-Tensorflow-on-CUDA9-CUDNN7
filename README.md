@@ -112,7 +112,7 @@ https://bazel.build/
 
 4． ./configure をかける
 
-・　 GCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
+・　 CUDA で使うGCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
 
 ・ 　CUDNN のバージョンは 7.0.2 とBuildNo まで入れること
 
