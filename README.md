@@ -89,6 +89,8 @@ deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64 /
 
 deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /
 
+（署名）
+
 sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64/7fa2af80.pub
 
 実際のURLは、
@@ -133,7 +135,7 @@ https://bazel.build/
 
 2017.9.28 に bazel 0.6.0 が登場したけど、ビルド不可 (bzlファイルが対応してない）ので、 bazel 0.5.4 にする必要がある
 
-以下リンクからダウンロードすればよい。
+以下リンクからダウンロード & dpkg すればよい。
 
 https://github.com/bazelbuild/bazel/releases/tag/0.5.4
 
@@ -142,7 +144,7 @@ https://github.com/bazelbuild/bazel/releases/tag/0.5.4
 
 ・　 CUDA で使うGCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
 
-・ 　CUDNN のバージョンは 7.0.3 と BuildNo まで入れること
+・ 　CUDNN のバージョンは "7.0.3" と BuildNo まで入れること
 
 
 5. （冒頭のとおり、ライブラリが正常にダウンロードできるようになったのでこの箇所は削除）
