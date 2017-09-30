@@ -1,6 +1,10 @@
 # Building-Tensorflow1.3.1-with-CUDA9-CUDNN7-on-UBUNTU-LINUX
 
-(17.9.28更新)
+
+(17.10.1更新）
+CUDNN 7.0.3 登場したのと、bazel が 0.6.0 になったけど動かないので 0.5.4 にする必要があることを追記。
+
+(17.9.29更新)
 CUDA9.0GA がリリース＋Tensorflow1.3.1 が公開されたので。
 
 UBUNTU Linux 上で、CUDA　9.0　+　CUDNN　7.0 でtensorflow　1.3.1 が構築できたよ。
@@ -13,7 +17,7 @@ Tensorflow 1.3.0 --> Tensorflow 1.3.1 ではロジックに手は加わってな
 
 ・CUDA 8.0, cudnn 6.0 でないと対応しない (CUDA 7.5, cudnn 5.X はダメらしい試してないけど)
 
-
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 環境
 
@@ -56,7 +60,6 @@ https://www.reddit.com/r/archlinux/comments/6zrmn1/torch_on_arch/
 
 　※　余談だが、このパッチは、　CUPY 2.0 を UBUNTU17.10 でビルドする場合にも必要（　nvcc.profile でバックエンドに使うコンパイラを GCC6（あるいはそれより前）に変更するだけではダメ）。
 
-
  以下は構築の手順
  
 
@@ -71,13 +74,30 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 
 https://developer.nvidia.com/cuda-downloads
 
-3. CUDNN 7.0.2
+3. CUDNN 7.0.3
 
 https://developer.nvidia.com/cudnn
 
 1〜3のインストールやりかたはここらへんに
 
 http://qiita.com/conta_/items/d639ef0068c9b7a0cd12
+
+
+CUDA,CUDNN は以下レポジトリから取得すればよい。
+
+deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64 /
+
+deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /
+
+sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64/7fa2af80.pub
+
+実際のURLは、
+
+http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64/
+
+http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64
+
+
 
 ※PATH等　環境変数はお忘れ無く
 
@@ -104,17 +124,25 @@ patch -p1 < ~/Downloads/0002-TF-1.3-CUDA-9.0-and-cuDNN-7.0-support.patch.txt
 
 https://github.com/tensorflow/tensorflow/pull/12502
 
+
 3． Bazel（Googleのビルド用t−ル）を入れる。
 
 https://bazel.build/
 
 ※Javaを入れる必要があるが、Java9は不可。Java8で。
 
+2017.9.28 に bazel 0.6.0 が登場したけど、ビルド不可 (bzlファイルが対応してない）ので、 bazel 0.5.4 にする必要がある
+
+以下リンクからダウンロードすればよい。
+
+https://github.com/bazelbuild/bazel/releases/tag/0.5.4
+
+
 4． ./configure をかける
 
 ・　 CUDA で使うGCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
 
-・ 　CUDNN のバージョンは 7.0.2 とBuildNo まで入れること
+・ 　CUDNN のバージョンは 7.0.3 と BuildNo まで入れること
 
 
 5. （冒頭のとおり、ライブラリが正常にダウンロードできるようになったのでこの箇所は削除）
