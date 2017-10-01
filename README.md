@@ -15,7 +15,7 @@ Tensorflow 1.3.0 --> Tensorflow 1.3.1 ではロジックに手は加わってな
 
 ・　Python3.6 にも正式対応
 
-・CUDA 8.0, cudnn 6.0 でないと対応しない (CUDA 7.5, cudnn 5.X はダメらしい試してないけど)
+・　CUDA 8.0, cudnn 6.0 でないと対応しない (CUDA 7.5, cudnn 5.X はダメらしい試してないけど)
 
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
@@ -28,14 +28,15 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
 　ubuntu 17.10beta ではそのままでは　ビルド不可（CUDA8.0もビルドNG）。
  
  
- 具体的には、GNU LIBC 2.26 以上でコンパイル不可。NVCC　が　”__float128” をサポートしてないのが原因。
+　 0． Ubuntu 17.10 でビルドする時の注意点
  
- "CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので（F.3.1 Host Restrictions）、多分来年のCUDA10.0 まではこの状態。
+ そのままではコンパイル不可。
+ 
+ 具体的には、GNU LIBC 2.26 以上でコンパイル不可。　NVCC　が　”__float128” をサポートしてないのが原因。"CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので（F.3.1 Host Restrictions）、多分来年のCUDA10.0 まではこの状態。
  
  http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
 
  以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
- 
  
  https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
  
@@ -48,11 +49,13 @@ OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が
  
  /usr/include/x86_64-linux-gnu/bits/floatn.h
  
- を、やっつけだが、以下パッチ(NVCCを通した場合は、 __float128 を無効に設定する）適用して、
+ を、やっつけだが、以下パッチ(NVCCを通した場合は、 __float128 を無効に設定する）適用して、回避できた。
  
  https://raw.githubusercontent.com/gdaisukesuzuki/Building-Tensorflow-on-CUDA9RC-CUDNN7/master/floatn.h-patch
  
- 回避はできた。。ubuntu とかにマージリクエストを出したけど、通るかは自信がない。CUDA のことだしね。
+ Ubuntu とかにマージリクエストを出したけど、通るかは自信がない。CUDA のことだしね。
+ 
+ https://bugs.launchpad.net/ubuntu/+source/glibc/+bug/1717257
  
  ちなみに、archlinux ではすでに議論にはあがっていた。
 
