@@ -2,12 +2,12 @@
 
 
 (17.10.1更新）
-CUDNN 7.0.3 登場したのと、bazel が 0.6.0 になったけど動かないので 0.5.4 にする必要があることを追記。
+cuDNN 7.0.3 登場したのと、bazel が 0.6.0 になったけど動かないので 0.5.4 を入れ直す必要があることを追記。
 
 (17.9.29更新)
 CUDA9.0GA がリリース＋Tensorflow1.3.1 が公開されたので。
 
-UBUNTU Linux 上で、CUDA　9.0　+　CUDNN　7.0 でtensorflow　1.3.1 が構築できたよ。
+Ubuntu Linux 上で、CUDA　9.0　+　cuDNN　7.0 でtensorflow　1.3.1 が構築できたよ。
 
 Tensorflow 1.3.0 --> Tensorflow 1.3.1 ではロジックに手は加わってない。そのかわり
 
@@ -74,7 +74,7 @@ sudo add-apt-repository ppa:graphics-drivers/ppa
 
 https://developer.nvidia.com/cuda-downloads
 
-3. CUDNN 7.0.3
+3. cuDNN 7.0.3
 
 https://developer.nvidia.com/cudnn
 
@@ -83,7 +83,7 @@ https://developer.nvidia.com/cudnn
 http://qiita.com/conta_/items/d639ef0068c9b7a0cd12
 
 
-CUDA,CUDNN は以下レポジトリから取得すればよい。
+CUDA,cuDNN は以下レポジトリから取得すればよい。
 
 deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1704/x86_64 /
 
@@ -142,9 +142,9 @@ https://github.com/bazelbuild/bazel/releases/tag/0.5.4
 
 4． ./configure をかける
 
-・　 CUDA で使うGCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
+・　 CUDA NVCC のバックエンドで使うGCCは、4.X でも 6 でも動く。ただし 7 ではビルド不可。
 
-・ 　CUDNN のバージョンは "7.0.3" と BuildNo まで入れること
+・ 　cuDNN のバージョンは "7.0.3" と BuildNo まで入れること
 
 
 5. （冒頭のとおり、ライブラリが正常にダウンロードできるようになったのでこの箇所は削除）
