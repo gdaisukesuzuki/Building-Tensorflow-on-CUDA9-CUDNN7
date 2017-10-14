@@ -1,5 +1,7 @@
 # Building-Tensorflow1.3.1-with-CUDA9-CUDNN7-on-UBUNTU-LINUX
 
+（17.10.14更新)
+Tensorflow1.4.0rc0 が出たのと、GLIBC で CUDA と相性悪い件、とりあえず解消されたので
 
 (17.10.1更新）
 cuDNN 7.0.3 登場したのと、bazel が 0.6.0 になったけど動かないので 0.5.4 を入れ直す必要があることを追記。
@@ -23,45 +25,8 @@ Tensorflow 1.3.0 --> Tensorflow 1.3.1 ではロジックに手は加わってな
 
 GPU: NVidia Geforce GTX1050/1050Ti/1060/1070/1080/1080Ti
 
-OS:  UBUNTU 16.04 , 17.04 　, 17.10 (17.10 はビルドできるけど注意が必要 at 2017.9.14 時点）
+OS:  UBUNTU 16.04 , 17.04 　, 17.10 (glibc+CUDA8/9 　の不具合は glibc 2.26-0ubuntu2 で回避されました)
 
-　ubuntu 17.10beta ではそのままでは　ビルド不可（CUDA8.0もビルドNG）。
- 
- 
-　 0． Ubuntu 17.10 でビルドする時の注意点
- 
- そのままではコンパイル不可。
- 
- 具体的には、GNU LIBC 2.26 以上でコンパイル不可。　NVCC　が　”__float128” をサポートしてないのが原因。"CUDA C PROGRAMMING GUIDE" のCUDA 9.0 にも書かれてるので（F.3.1 Host Restrictions）、多分来年のCUDA10.0 まではこの状態。
- 
- http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
-
- 以下は、CUDA8.0 の議論なのだが、CUDA9.0 でも同様。Ubuntu17.04 のサポート期限は来年1月までなので、そこまでには解消されると思われるが, NVIDIA にやる気を出して貰うしかない状態。
- 
- https://devtalk.nvidia.com/default/topic/1023776/-request-add-nvcc-compatibility-with-glibc-2-26/
- 
-
-*回避策
-
- なので、ちょー邪道な方法だが、glibc2.26 で、__float128 を宣言を無効にするしかない。
- 
- 具体的には
- 
- /usr/include/x86_64-linux-gnu/bits/floatn.h
- 
- を、やっつけだが、以下パッチ(NVCCを通した場合は、 __float128 を無効に設定する）適用して、回避できた。
- 
- https://raw.githubusercontent.com/gdaisukesuzuki/Building-Tensorflow-on-CUDA9RC-CUDNN7/master/floatn.h-patch
- 
- Ubuntu とかにマージリクエストを出したけど、通るかは自信がない。CUDA のことだしね。
- 
- https://bugs.launchpad.net/ubuntu/+source/glibc/+bug/1717257
- 
- ちなみに、archlinux ではすでに議論にはあがっていた。
-
-https://www.reddit.com/r/archlinux/comments/6zrmn1/torch_on_arch/
-
-　※　余談だが、このパッチは、　CUPY 2.0 を UBUNTU17.10 でビルドする場合にも必要（　nvcc.profile でバックエンドに使うコンパイラを GCC6（あるいはそれより前）に変更するだけではダメ）。
 
  以下は構築の手順
  
@@ -114,7 +79,7 @@ TENSORFLOW
 
 https://github.com/tensorflow/tensorflow/releases/tag/v1.3.1
 
-2. CUDA9.0 用パッチ
+2. CUDA9.0 用パッチ　（TF 1.4.0 以降では不要）
 
 https://github.com/tensorflow/tensorflow/issues/12474
 
@@ -167,11 +132,12 @@ GPUによる処理メインでも、CPU の SSE やらAVXは使えるに越し�
 
 https://gcc.gnu.org/onlinedocs/gcc-6.1.0/gcc/x86-Options.html#x86-Options
 
-とりあえず、自分のビルドコマンド例
+とりあえず、自分のビルドコマンド例 (-ffast-math は1.4以降では動かないっぽい・)
 
-bazel build -c opt   --config=cuda --copt=-march=skylake --copt=-mfpmath=both --copt=-ffast-math --copt=-O3 //tensorflow/tools/pip_package:build_pip_package
+bazel build -c opt   --config=cuda --copt=-march=skylake --copt=-mfpmath=both --copt=-O3 //tensorflow/tools/pip_package:build_pip_package
  
-7．ただしこの時点では(CUDA9.0では）エラーが出るので、別のパッチ（上記ISSUEにも記載あり。Eigenまわりのパッチらしい）をダウンロード＆パッチ当てしてビルド再実行。
+7．　（TF 1.4.0 以降では不要）
+ただしこの時点では(CUDA9.0では）エラーが出るので、別のパッチ（上記ISSUEにも記載あり。Eigenまわりのパッチらしい）をダウンロード＆パッチ当てしてビルド再実行。
 
 wget https://storage.googleapis.com/tf-performance/public/cuda9rc_patch/eigen.f3a22f35b044.cuda9.diff
 
